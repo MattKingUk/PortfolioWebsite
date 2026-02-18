@@ -72,10 +72,12 @@ jobs:
 
           # Copy built app to web root (remove old, copy new)
           rm -rf "$WEB_ROOT"/*
-          cp -r dist/portfolio-try-3/* "$WEB_ROOT/"
+          cp -r dist/portfolio-try-3/browser* "$WEB_ROOT/"
 
           # Install pm2 if needed and start backend
           if ! command -v pm2 >/dev/null 2>&1; then
             npm install -g pm2
           fi
           pm2 startOrReload ecosystem.config.js --env production || pm2 start ecosystem.config.js --env production
+          pm2 save
+          pm2 status
