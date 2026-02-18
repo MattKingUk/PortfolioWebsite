@@ -33,6 +33,7 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 7822
         script: |
+          source ~/.bashrc
           set -euo pipefail
           REPO_PATH="/home/mattking.uk/portfolio"
           WEB_ROOT="/home/mattking.uk/public_html"
