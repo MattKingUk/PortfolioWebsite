@@ -1,0 +1,33 @@
+<section id="header">
+    <div class="heading-container">
+        <span class="title">{{ settingsService.get('site_title', 'Matt King') }}</span>
+        <span class="subtitle">{{ settingsService.get('site_subtitle', 'Software Engineer') }}</span>
+    </div>
+    <app-tech-illustration></app-tech-illustration>
+</section>
+<div class="content-with-sidebar">
+    <div class="main-content" [class.shrunk]="contactFormOpen()">
+        <section id="calendar">
+            <div class="calendar-container">
+                <!-- Google Calendar Appointment Scheduling begin -->
+                <iframe src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1z98d_nO8xDQwPzuMnlG9ovtcQmVwHEb7eUdMGlmwTi71EJOrqYTWHkmAk40T3WlcQhD7aQA8_?gv=true" style="border: 0" width="100%" height="820" frameborder="0"></iframe>
+                <!-- end Google Calendar Appointment Scheduling -->
+            </div>
+        </section>
+        <section id="blog-preview">
+            @if (latestPost(); as post) {
+                <div class="blog-preview-container">
+                    <h2 class="section-heading"><a href="/blog">Latest from the Blog<svg width="27" height="27" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: inline; margin-left: 8px; vertical-align: middle; transform: rotate(-45deg);">
+                            <path d="M4 10h12M14 7l3 3-3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </a></h2>
+                    <app-blog-preview [post]="post" [featured]="true"></app-blog-preview>
+                </div>
+            }
+        </section>
+    </div>
+    @if (contactFormOpen()) {
+        <app-contact-form (closed)="toggleContactForm()"></app-contact-form>
+    }
+</div>
+<app-navbar [items]="navItems" (contactFormToggle)="toggleContactForm()"></app-navbar>

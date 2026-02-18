@@ -1,0 +1,93 @@
+@use 'glass' as *;
+
+.contact-details-container{
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    background: $glass-bg;
+    backdrop-filter: blur($glass-blur) saturate(200%) brightness(1.05);
+    -webkit-backdrop-filter: blur($glass-blur) saturate(200%) brightness(1.05);
+    border-top: 1px solid $glass-border;
+    border-bottom: 1px solid $glass-border;
+    box-shadow:
+        0 8px 40px rgba(100, 120, 160, 0.10),
+        0 2px 12px rgba(100, 120, 160, 0.08),
+        inset 0 1.5px 0 rgba(255, 255, 255, 0.95),
+        inset 0 -1px 0 rgba(200, 210, 230, 0.15);
+    padding: 40px 0px;
+    padding-bottom: 80px;
+
+}
+
+.contact-details{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 600px;
+    gap: 30px;
+}
+
+.contact-section{
+    text-align: center;
+    width: 100%;
+}
+
+.contact-section h3{
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0 0 20px 0;
+    letter-spacing: 0.5px;
+    color: rgba(30, 35, 50, 0.9);
+    -webkit-font-smoothing: antialiased;
+}
+
+.contact-link{
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: rgba(30, 35, 50, 0.85);
+    -webkit-font-smoothing: antialiased;
+}
+
+.contact-link:hover{
+    transform: translateY(-3px);
+}
+
+.contact-link .icon{
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.footer-copyright{
+    width: 100%;
+    padding-top: 20px;
+    border-top: 1px solid rgba(51, 51, 51, 0.2);
+    text-align: center;
+}
+
+.footer-copyright p{
+    margin: 0;
+    font-size: 14px;
+    opacity: 0.8;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+@media screen and (max-width: 728px) {
+    .contact-details-container{
+        padding-bottom: 110px;
+    }
+    
+}

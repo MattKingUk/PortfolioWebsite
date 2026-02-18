@@ -1,0 +1,62 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '22'
+
+    - name: Install frontend dependencies
+      run: npm install
+
+    - name: Build Angular app
+      run: npx ng build --configuration=production
+
+    - name: Install backend dependencies
+      run: cd server && npm install
+
+    - name: Deploy to server (via SSH)
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.DEPLOY_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          set -euo pipefail
+          mkdir -p /var/www/portfolio
+          cd /var/www/portfolio
+
+          if [ -d .git ]; then
+            git fetch --all
+            git reset --hard origin/main
+          else
+            git clone https://github.com/${{ github.repository }} . || true
+          fi
+
+          # Write server/.env from secrets
+          cat > server/.env <<EOF
+          JWT_SECRET=${{ secrets.JWT_SECRET }}
+          ADMIN_USERNAME=${{ secrets.ADMIN_USERNAME }}
+          ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }}
+          CORS_ORIGIN=${{ secrets.CORS_ORIGIN }}
+          EOF
+          chmod 600 server/.env
+
+          npm install
+          cd server && npm install && cd ..
+          npx ng build --configuration=production
+
+          if ! command -v pm2 >/dev/null 2>&1; then
+            npm install -g pm2
+          fi
+          pm2 startOrReload ecosystem.config.js --env production || pm2 start ecosystem.config.js --env production

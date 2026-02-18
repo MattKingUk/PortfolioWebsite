@@ -1,0 +1,537 @@
+@use 'glass' as *;
+
+*{
+    margin: 0;
+    padding: 0;
+    color: #333;
+    box-sizing: border-box;
+}
+
+html {
+    overflow-x: clip;
+}
+
+body {
+    overflow-x: clip;
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    bottom: -50vh;
+    left: -50vw;
+    width: 124vmax;
+    height: 62vmax;
+    border-radius: 50%;
+    background:
+        radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.28) 0%, transparent 50%),
+        radial-gradient(circle at 35% 65%, rgba(59, 130, 246, 0.22) 0%, transparent 55%),
+        radial-gradient(circle at 65% 40%, rgba(236, 72, 153, 0.18) 0%, transparent 50%);
+    filter: blur(80px);
+    z-index: -1;
+    pointer-events: none;
+    animation: auraShift 14s ease-in-out infinite alternate;
+}
+
+@keyframes auraShift {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.7;
+    }
+    50% {
+        transform: translate(2vw, -2vh) scale(1.05);
+        opacity: 0.85;
+    }
+    100% {
+        transform: translate(-1vw, 1vh) scale(0.97);
+        opacity: 0.75;
+    }
+}
+
+section{
+    min-height: 100vh;
+    position: relative;
+}
+
+.heading-container{
+    position: absolute;
+    left: 9%;
+    top: 45%;
+    transform: translateY(-50%);
+    width: 34%;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.title{
+    position: relative;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 54px;
+    font-weight: 700;
+    color: rgba(30, 35, 50, 0.9);
+    margin: 0;
+    letter-spacing: -0.02em;
+    text-align: left;
+    -webkit-font-smoothing: antialiased;
+}
+
+.subtitle{
+    position: relative;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 32px;
+    font-weight: 400;
+    color: rgba(30, 35, 50, 0.7);
+    margin: 0;
+    letter-spacing: -0.02em;
+    text-align: left;
+    -webkit-font-smoothing: antialiased;
+}
+
+.content-with-sidebar {
+    display: flex;
+    position: relative;
+}
+
+.main-content {
+    width: 100%;
+    transition: width 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    flex-shrink: 0;
+
+    &.shrunk {
+        width: 60vw;
+    }
+}
+
+@media (max-width: 768px) {
+    .content-with-sidebar {
+        flex-direction: column;
+    }
+
+    .main-content.shrunk {
+        width: 100%;
+    }
+
+    .heading-container{
+        top: unset;
+        bottom: 18vh;
+        transform: translateY(0);
+        width: 82%;
+    }
+}
+
+html.dark {
+    body {
+        background-color: #0f1117;
+    }
+
+    body::before {
+        background:
+            radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.18) 0%, transparent 50%),
+            radial-gradient(circle at 35% 65%, rgba(59, 130, 246, 0.14) 0%, transparent 55%),
+            radial-gradient(circle at 65% 40%, rgba(236, 72, 153, 0.12) 0%, transparent 50%);
+    }
+
+    * {
+        color: rgba(220, 225, 240, 0.9);
+    }
+
+    .title {
+        color: rgba(220, 225, 240, 0.95);
+    }
+
+    .subtitle {
+        color: rgba(180, 190, 210, 0.75);
+    }
+
+    .contact-details-container,
+    .navbar-background,
+    .contact-form-sticky,
+    .search-bar,
+    .blog-card {
+        background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.08) 0%,
+            rgba(255, 255, 255, 0.04) 40%,
+            rgba(200, 210, 240, 0.05) 70%,
+            rgba(255, 255, 255, 0.07) 100%
+        ) !important;
+        backdrop-filter: blur(28px) saturate(180%) brightness(0.7) !important;
+        -webkit-backdrop-filter: blur(28px) saturate(180%) brightness(0.7) !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        border-bottom-color: rgba(0, 0, 0, 0.2) !important;
+        box-shadow:
+            0 8px 40px rgba(0, 0, 0, 0.3),
+            0 2px 12px rgba(0, 0, 0, 0.2),
+            inset 0 1.5px 0 rgba(255, 255, 255, 0.1),
+            inset 0 -1px 0 rgba(0, 0, 0, 0.25),
+            inset 1px 0 0 rgba(255, 255, 255, 0.06),
+            inset -1px 0 0 rgba(255, 255, 255, 0.06) !important;
+    }
+
+    .navbar-background::before,
+    .contact-form-sticky::before {
+        background: linear-gradient(
+            165deg,
+            rgba(255, 255, 255, 0.12) 0%,
+            rgba(255, 255, 255, 0.04) 25%,
+            transparent 50%,
+            rgba(255, 255, 255, 0.02) 80%,
+            rgba(255, 255, 255, 0.05) 100%
+        ) !important;
+    }
+
+    .section-heading,
+    .form-title,
+    .contact-section h3 {
+        color: rgba(220, 225, 240, 0.95) !important;
+    }
+
+    .form-subtitle,
+    .footer-copyright p {
+        color: rgba(180, 190, 210, 0.6) !important;
+    }
+
+    .form-group {
+        label {
+            color: rgba(180, 190, 210, 0.8) !important;
+        }
+
+        input, textarea {
+            background: rgba(20, 22, 35, 0.6) !important;
+            border-color: rgba(80, 90, 120, 0.35) !important;
+            color: rgba(220, 225, 240, 0.9) !important;
+
+            &::placeholder {
+                color: rgba(150, 160, 185, 0.4) !important;
+            }
+
+            &:focus {
+                border-color: rgba(100, 130, 220, 0.5) !important;
+                background: rgba(25, 28, 42, 0.8) !important;
+                box-shadow: 0 0 0 3px rgba(100, 130, 220, 0.15) !important;
+            }
+        }
+    }
+
+    .send-btn {
+        background: linear-gradient(135deg, rgba(200, 210, 240, 0.9) 0%, rgba(180, 190, 225, 0.85) 100%) !important;
+        color: rgba(15, 17, 23, 0.95) !important;
+    }
+
+    .close-btn {
+        background: rgba(30, 33, 48, 0.6) !important;
+        border-color: rgba(80, 90, 120, 0.3) !important;
+        color: rgba(200, 210, 230, 0.7) !important;
+
+        &:hover {
+            background: rgba(40, 44, 60, 0.8) !important;
+            color: rgba(220, 225, 240, 1) !important;
+        }
+    }
+
+    .contact-link {
+        color: rgba(180, 190, 220, 0.85) !important;
+    }
+
+    .section-heading a {
+        color: rgba(220, 225, 240, 0.95) !important;
+    }
+
+    .blog-content {
+        color: rgba(220, 225, 240, 0.9) !important;
+
+        h1, h2, h3, h4, h5, h6 {
+            color: rgba(220, 225, 240, 0.95) !important;
+        }
+
+        p, li {
+            color: rgba(200, 210, 230, 0.85) !important;
+        }
+    }
+
+    .search-icon {
+        color: rgba(160, 175, 210, 0.5) !important;
+    }
+
+    .search-input::placeholder {
+        color: rgba(150, 160, 185, 0.35) !important;
+    }
+
+    .spinner {
+        border-color: rgba(100, 120, 160, 0.2) !important;
+        border-top-color: rgba(100, 130, 220, 0.6) !important;
+    }
+
+    .blog-empty p {
+        color: rgba(180, 190, 210, 0.6) !important;
+    }
+
+    .portfolio-container {
+        color: rgba(220, 225, 240, 0.9) !important;
+
+        h1, h2, h3, h4, h5, h6 {
+            color: rgba(220, 225, 240, 0.95) !important;
+        }
+
+        p {
+            color: rgba(200, 210, 230, 0.85) !important;
+        }
+    }
+
+    .skeleton-card {
+        background: linear-gradient(110deg, #1a1d2e 8%, #22263a 18%, #1a1d2e 33%) !important;
+        background-size: 200% 100%;
+    }
+
+    .contact-form-sticky {
+        background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.08) 0%,
+            rgba(255, 255, 255, 0.04) 40%,
+            rgba(200, 210, 240, 0.05) 70%,
+            rgba(255, 255, 255, 0.07) 100%
+        ) !important;
+        backdrop-filter: blur(28px) saturate(200%) brightness(0.7) !important;
+        -webkit-backdrop-filter: blur(28px) saturate(200%) brightness(0.7) !important;
+        border-color: rgba(255, 255, 255, 0.12) !important;
+        border-bottom-color: rgba(0, 0, 0, 0.2) !important;
+        box-shadow:
+            0 8px 40px rgba(0, 0, 0, 0.3),
+            0 2px 12px rgba(0, 0, 0, 0.2),
+            inset 0 1.5px 0 rgba(255, 255, 255, 0.1),
+            inset 0 -1px 0 rgba(0, 0, 0, 0.25) !important;
+
+        &::before {
+            background: linear-gradient(
+                165deg,
+                rgba(255, 255, 255, 0.12) 0%,
+                rgba(255, 255, 255, 0.04) 25%,
+                transparent 50%,
+                rgba(255, 255, 255, 0.02) 80%,
+                rgba(255, 255, 255, 0.05) 100%
+            ) !important;
+        }
+    }
+
+    .send-btn {
+        background: linear-gradient(135deg, rgba(100, 160, 255, 0.95) 0%, rgba(80, 140, 255, 0.9) 100%) !important;
+        color: rgba(15, 17, 23, 0.95) !important;
+
+        &:hover {
+            background: linear-gradient(135deg, rgba(120, 180, 255, 1) 0%, rgba(100, 160, 255, 0.95) 100%) !important;
+            box-shadow: 0 6px 24px rgba(100, 160, 255, 0.4) !important;
+        }
+
+        &:active {
+            transform: translateY(0) !important;
+        }
+    }
+    .preview-card {
+        background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.08) 0%,
+            rgba(255, 255, 255, 0.04) 40%,
+            rgba(200, 210, 240, 0.05) 70%,
+            rgba(255, 255, 255, 0.07) 100%
+        ) !important;
+        backdrop-filter: blur(28px) saturate(180%) brightness(0.7) !important;
+        -webkit-backdrop-filter: blur(28px) saturate(180%) brightness(0.7) !important;
+        border-color: rgba(255, 255, 255, 0.12) !important;
+        border-bottom-color: rgba(0, 0, 0, 0.2) !important;
+        box-shadow:
+            0 4px 24px rgba(0, 0, 0, 0.2),
+            0 1px 6px rgba(0, 0, 0, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.08),
+            inset 0 -1px 0 rgba(0, 0, 0, 0.2) !important;
+
+        &:hover {
+            box-shadow:
+                0 12px 40px rgba(0, 0, 0, 0.25),
+                0 4px 16px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.25) !important;
+        }
+    }
+
+    .preview-title {
+        color: rgba(220, 225, 240, 0.95) !important;
+    }
+
+    .preview-excerpt {
+        color: rgba(180, 190, 210, 0.7) !important;
+    }
+
+    .preview-image {
+        border-bottom-color: rgba(100, 120, 160, 0.15) !important;
+    }
+
+    .preview-card .tag,
+    .tag {
+        color: rgba(100, 130, 220, 0.8) !important;
+        background: rgba(100, 130, 220, 0.12) !important;
+        border-color: rgba(100, 130, 220, 0.15) !important;
+    }
+
+    .back-link {
+        color: rgba(150, 170, 220, 0.8) !important;
+
+        &:hover {
+            color: rgba(180, 200, 240, 1) !important;
+        }
+
+        svg {
+            color: rgba(150, 170, 220, 0.8) !important;
+        }
+    }
+
+    .read-blog-title {
+        color: rgba(220, 225, 240, 0.95) !important;
+    }
+
+    .read-blog-meta {
+        color: rgba(180, 190, 210, 0.6) !important;
+
+        .meta-separator {
+            color: rgba(100, 120, 160, 0.3) !important;
+        }
+    }
+
+    .read-blog-body {
+        color: rgba(200, 210, 230, 0.85) !important;
+
+        strong {
+            color: rgba(220, 225, 240, 0.95) !important;
+        }
+
+        code {
+            background: rgba(100, 130, 220, 0.15) !important;
+            color: rgba(150, 180, 255, 0.9) !important;
+        }
+    }
+
+    .comments-section {
+        border-top-color: rgba(100, 120, 160, 0.2) !important;
+    }
+
+    .comments-heading {
+        color: rgba(220, 225, 240, 0.95) !important;
+    }
+
+    .comments-count {
+        color: rgba(100, 130, 220, 0.7) !important;
+        background: rgba(100, 130, 220, 0.12) !important;
+    }
+
+    .no-comments {
+        color: rgba(180, 190, 210, 0.6) !important;
+    }
+
+    .comment-card {
+        background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.08) 0%,
+            rgba(255, 255, 255, 0.04) 40%,
+            rgba(200, 210, 240, 0.05) 70%,
+            rgba(255, 255, 255, 0.07) 100%
+        ) !important;
+        backdrop-filter: blur(20px) saturate(160%) brightness(0.7) !important;
+        -webkit-backdrop-filter: blur(20px) saturate(160%) brightness(0.7) !important;
+        border-color: rgba(255, 255, 255, 0.12) !important;
+        box-shadow:
+            0 2px 12px rgba(0, 0, 0, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+    }
+
+    .comment-avatar {
+        background: linear-gradient(135deg, rgba(100, 130, 220, 0.15), rgba(150, 180, 255, 0.2)) !important;
+        color: rgba(150, 180, 255, 0.8) !important;
+    }
+
+    .comment-author {
+        color: rgba(220, 225, 240, 0.95) !important;
+    }
+
+    .comment-date {
+        color: rgba(180, 190, 210, 0.6) !important;
+    }
+
+    .comment-text {
+        color: rgba(200, 210, 230, 0.8) !important;
+    }
+
+    .read-blog-not-found h2 {
+        color: rgba(220, 225, 240, 0.95) !important;
+    }
+
+    .read-blog-not-found p {
+        color: rgba(180, 190, 210, 0.6) !important;
+    }
+
+    .project-detail-container {
+        color: rgba(220, 225, 240, 0.9) !important;
+
+        h1, h2, h3, h4, h5, h6 {
+            color: rgba(220, 225, 240, 0.95) !important;
+        }
+
+        p, li, span {
+            color: rgba(200, 210, 230, 0.85) !important;
+        }
+    }
+
+    .project-header h1 {
+        color: rgba(220, 225, 240, 0.95) !important;
+    }
+
+    .project-header .description {
+        color: rgba(180, 190, 210, 0.75) !important;
+    }
+
+    .meta-row .date {
+        color: rgba(150, 160, 190, 0.6) !important;
+    }
+
+    .meta-row .tag {
+        background: rgba(100, 130, 220, 0.12) !important;
+        color: rgba(150, 180, 255, 0.8) !important;
+    }
+
+    .btn-primary {
+        background: rgba(200, 210, 240, 0.9) !important;
+        color: rgba(15, 17, 23, 0.95) !important;
+
+        &:hover {
+            background: rgba(220, 230, 255, 0.95) !important;
+        }
+    }
+
+    .btn-secondary {
+        background: rgba(30, 33, 48, 0.6) !important;
+        color: rgba(180, 190, 220, 0.85) !important;
+
+        &:hover {
+            background: rgba(40, 44, 60, 0.8) !important;
+        }
+    }
+
+    .search-input {
+        background: transparent !important;
+        color: rgba(220, 225, 240, 0.9) !important;
+    }
+
+    .nav-label {
+        color: rgba(200, 210, 230, 0.85) !important;
+    }
+
+    .nav-link svg,
+    .nav-icon {
+        color: rgba(160, 175, 210, 0.75) !important;
+    }
+
+    iframe[src*="calendar.google.com"] {
+        filter: invert(0.85) brightness(0.9) hue-rotate(180deg) !important;
+    }
+}

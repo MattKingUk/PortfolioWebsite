@@ -1,0 +1,23 @@
+<router-outlet></router-outlet>
+<footer class="contact-details-container">
+  <div class="contact-details">
+    <div class="contact-section">
+      <h3>Get In Touch</h3>
+      @if (settingsService.get('contact_email')) {
+      <a [href]="'mailto:' + settingsService.get('contact_email')" class="contact-link email">
+        <span class="icon">✉</span>
+        <span>{{ settingsService.get('contact_email') }}</span>
+      </a>
+      }
+      @if (settingsService.get('contact_phone')) {
+      <a [href]="formatPhoneLink(settingsService.get('contact_phone'))" class="contact-link email">
+        <span class="icon">☎</span>
+        <span>{{ settingsService.get('contact_phone') }}</span>
+      </a>
+      }
+    </div>
+    <div class="footer-copyright">
+      <p>{{ settingsService.get('footer_copyright', '© 2026 All rights reserved.') }}</p>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,16 @@
+<a class="preview-card" [class.featured]="featured" [routerLink]="['/blog', post.id]">
+  <div class="preview-image" [style.backgroundImage]="'url(' + post.coverImage + ')'"></div>
+  <div class="preview-content">
+    <div class="preview-tags">
+      @for (tag of post.tags; track tag) {
+        <span class="tag">{{ tag }}</span>
+      }
+    </div>
+    <h3 class="preview-title">{{ post.title }}</h3>
+    <p class="preview-excerpt">{{ post.excerpt }}</p>
+    <div class="preview-meta">
+      <span class="preview-author">{{ post.author }}</span>
+      <span class="preview-date">{{ formattedDate }}</span>
+    </div>
+  </div>
+</a>

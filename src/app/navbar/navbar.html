@@ -1,0 +1,44 @@
+@if (isMobile()) {
+  <!-- Mobile: simple horizontal bar, bottom → top -->
+  <nav class="mobile-navbar">
+    <div class="mobile-navbar-glass">
+      @for(item of itemDisplay; track item.label) {
+        <div class="mobile-nav-item" (click)="item.external ? openExternal(item.linkOrElement) : navigate(item.linkOrElement)">
+          <div class="icon-wrapper" [innerHTML]="item.svg"></div>
+        </div>
+      }
+    </div>
+  </nav>
+} @else {
+  <!-- Desktop: animated journey layout -->
+  @if(!isInJourney()){
+    <div 
+      class="navbar-background"
+      [style.left.px]="backgroundBounds().left"
+      [style.top.px]="backgroundBounds().top"
+      [style.width.px]="backgroundBounds().width"
+      [style.height.px]="backgroundBounds().height"
+    >
+    </div>
+  }
+  <ul class="navbar" [class.sidebar-mode]="isSidebar()">
+      @for(item of itemDisplay; track item.label) {
+          <li
+          #navItem
+          [class.in-journey]="isInJourney()"
+          [class.sidebar-item]="isSidebar()"
+          [style.left]="item.left+`%`"
+          [style.top]="item.top+`%`"
+          (click)="item.external ? openExternal(item.linkOrElement) : navigate(item.linkOrElement)"
+          >
+              <div class="icon-wrapper" [innerHTML]="item.svg"></div>
+              @if(!isSidebar() && labelOpacity() > 0) {
+                <span class="nav-label">{{ item.label }}</span>
+              }
+              @if(isSidebar()) {
+                <span class="tooltip">{{ item.label }}</span>
+              }
+          </li>
+      }
+  </ul>
+}

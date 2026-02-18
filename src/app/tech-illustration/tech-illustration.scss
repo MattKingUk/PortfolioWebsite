@@ -1,0 +1,108 @@
+.graphic-container {
+    position: absolute;
+    right: 9%;
+    top: 9%;
+    bottom: 18%;
+    width: 39%;
+    border-radius: 18px;
+    background: transparent;
+    overflow: visible;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tech-illustration {
+    width: 82%;
+    height: 82%;
+    overflow: visible;
+}
+
+/* ── shared stroke defaults ── */
+.icon > * {
+    fill: none;
+    stroke-width: 5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    opacity: 0;
+}
+
+/* ── per-icon colour + delay + glow ── */
+.icon--computer {
+    filter: drop-shadow(0 0 9px rgba(88, 237, 255, 0.8))
+            drop-shadow(0 0 21px rgba(88, 237, 255, 0.5))
+            drop-shadow(0 0 40px rgba(88, 237, 255, 0.3));
+
+    > * {
+        stroke: #ffffff;
+        animation: drawIcon 9s linear infinite;
+        animation-delay: 0s;
+    }
+}
+
+.icon--brain {
+    filter: drop-shadow(0 0 9px rgba(255, 158, 207, 0.8))
+            drop-shadow(0 0 21px rgba(255, 158, 207, 0.5))
+            drop-shadow(0 0 40px rgba(255, 158, 207, 0.3));
+
+    > * {
+        stroke: #ffffff;
+        animation: drawIcon 9s linear infinite;
+        animation-delay: 3s;
+    }
+
+    > circle {
+        fill: #ffffff;
+        stroke: none;
+        stroke-dasharray: 0;
+        stroke-dashoffset: 0;
+    }
+}
+
+.icon--bulb {
+    filter: drop-shadow(0 0 9px rgba(255, 210, 103, 0.8))
+            drop-shadow(0 0 21px rgba(255, 210, 103, 0.5))
+            drop-shadow(0 0 40px rgba(255, 210, 103, 0.3));
+
+    > * {
+        stroke: #ffffff;
+        animation: drawIcon 9s linear infinite;
+        animation-delay: 6s;
+    }
+}
+
+/* ── sequential draw keyframes ──
+   Total cycle 9 s · each icon owns 3 s
+   0-2%      fade in
+   2-32%     draw + hold
+   32-33.3%  fade out (fast!)
+   33.4-100% invisible waiting for next
+*/
+@keyframes drawIcon {
+    0% {
+        stroke-dashoffset: 1000;
+        opacity: 0;
+    }
+    2% {
+        stroke-dashoffset: 1000;
+        opacity: 1;
+    }
+    32% {
+        stroke-dashoffset: 0;
+        opacity: 1;
+    }
+    33.3% {
+        stroke-dashoffset: 0;
+        opacity: 0;
+    }
+    33.4% {
+        stroke-dashoffset: 1000;
+        opacity: 0;
+    }
+    100% {
+        stroke-dashoffset: 1000;
+        opacity: 0;
+    }
+}

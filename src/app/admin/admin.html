@@ -1,0 +1,442 @@
+<!-- ── Login Screen ─────────────────────────────────────── -->
+@if (!auth.isLoggedIn()) {
+<div class="admin-login">
+  <div class="login-card">
+    <h1>Admin Login</h1>
+    <p class="login-subtitle">Sign in to manage your portfolio</p>
+
+    @if (loginError()) {
+    <div class="alert alert-error">{{ loginError() }}</div>
+    }
+
+    <form (ngSubmit)="login()">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input
+          id="username"
+          type="text"
+          [(ngModel)]="loginUsername"
+          name="username"
+          placeholder="Enter username"
+          required
+          autocomplete="username"
+        />
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          [(ngModel)]="loginPassword"
+          name="password"
+          placeholder="Enter password"
+          required
+          autocomplete="current-password"
+        />
+      </div>
+      <button type="submit" class="btn btn-primary btn-full" [disabled]="loginLoading()">
+        {{ loginLoading() ? 'Signing in...' : 'Sign In' }}
+      </button>
+    </form>
+  </div>
+</div>
+} @else {
+
+<!-- ── Dashboard ───────────────────────────────────────── -->
+<div class="admin-dashboard">
+  <header class="admin-header">
+    <h1>Dashboard</h1>
+    <button class="btn btn-ghost" (click)="logout()">Sign Out</button>
+  </header>
+
+  <!-- Tabs -->
+  <nav class="admin-tabs">
+    <button
+      [class.active]="activeTab() === 'settings'"
+      (click)="switchTab('settings')"
+    >Settings</button>
+    <button
+      [class.active]="activeTab() === 'blog'"
+      (click)="switchTab('blog')"
+    >Blog Posts</button>
+    <button
+      [class.active]="activeTab() === 'portfolio'"
+      (click)="switchTab('portfolio')"
+    >Portfolio</button>
+    <button
+      [class.active]="activeTab() === 'comments'"
+      (click)="switchTab('comments')"
+    >Comments</button>
+    <button
+      [class.active]="activeTab() === 'password'"
+      (click)="switchTab('password')"
+    >Password</button>
+  </nav>
+
+  <div class="tab-content">
+
+    <!-- ═══ Settings Tab ═══════════════════════════════════ -->
+    @if (activeTab() === 'settings') {
+    <section class="tab-panel">
+      <div class="panel-header">
+        <h2>Site Settings</h2>
+        @if (settingsMessage()) {
+        <span class="status-msg">{{ settingsMessage() }}</span>
+        }
+      </div>
+
+      <div class="settings-grid">
+        @for (key of settingsKeys(); track key) {
+        <div class="form-group">
+          <label>{{ formatSettingLabel(key) }}</label>
+          <input
+            type="text"
+            [value]="settings()[key]"
+            (input)="updateSetting(key, $event)"
+          />
+        </div>
+        }
+      </div>
+
+      <div class="panel-actions">
+        <button class="btn btn-primary" (click)="saveSettings()" [disabled]="settingsSaving()">
+          {{ settingsSaving() ? 'Saving...' : 'Save Settings' }}
+        </button>
+      </div>
+    </section>
+    }
+
+    <!-- ═══ Blog Posts Tab ═════════════════════════════════ -->
+    @if (activeTab() === 'blog') {
+    <section class="tab-panel">
+
+      @if (editingPost() === null) {
+      <!-- Post List -->
+      <div class="panel-header">
+        <h2>Blog Posts</h2>
+        @if (postMessage()) {
+        <span class="status-msg">{{ postMessage() }}</span>
+        }
+        <button class="btn btn-primary" (click)="newPost()">+ New Post</button>
+      </div>
+
+      @if (postsLoading()) {
+      <p class="loading-text">Loading posts...</p>
+      } @else {
+      <div class="data-table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Author</th>
+              <th>Date</th>
+              <th>Tags</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (post of posts(); track post.id) {
+            <tr>
+              <td>{{ post.title }}</td>
+              <td>{{ post.author }}</td>
+              <td>{{ formatDate(post.date) }}</td>
+              <td>
+                @for (tag of post.tags; track tag) {
+                <span class="tag">{{ tag }}</span>
+                }
+              </td>
+              <td class="actions-cell">
+                <button class="btn btn-sm" (click)="editPost(post)">Edit</button>
+                <button class="btn btn-sm btn-danger" (click)="deletePost(post)">Delete</button>
+              </td>
+            </tr>
+            } @empty {
+            <tr><td colspan="5" class="empty-row">No blog posts yet.</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      }
+
+      } @else {
+      <!-- Post Edit Form -->
+      <div class="panel-header">
+        <h2>{{ editingPost()?.id ? 'Edit Post' : 'New Post' }}</h2>
+      </div>
+
+      <div class="edit-form">
+        <div class="form-row">
+          <div class="form-group flex-2">
+            <label>Title</label>
+            <input type="text" [(ngModel)]="editingPost()!.title" />
+          </div>
+          <div class="form-group flex-1">
+            <label>Author</label>
+            <input type="text" [(ngModel)]="editingPost()!.author" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label>Date</label>
+            <input type="date" [(ngModel)]="editingPost()!.date" />
+          </div>
+          <div class="form-group flex-2">
+            <label>Tags (comma-separated)</label>
+            <input type="text" [(ngModel)]="postTagsInput" placeholder="Angular, TypeScript, WebDev" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Cover Image</label>
+          <div class="image-upload-row">
+            @if (editingPost()?.coverImage) {
+            <img [src]="editingPost()!.coverImage" alt="Cover preview" class="cover-preview" />
+            }
+            <input type="file" accept="image/*" (change)="onCoverImageUpload($event)" />
+            <span class="or-text">or</span>
+            <input type="text" [(ngModel)]="editingPost()!.coverImage" placeholder="Paste image URL" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Excerpt</label>
+          <textarea rows="3" [(ngModel)]="editingPost()!.excerpt" placeholder="Brief description..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Body (HTML)</label>
+          <textarea rows="14" [(ngModel)]="editingPost()!.body" placeholder="Full post content (HTML supported)..." class="code-area"></textarea>
+        </div>
+
+        @if (postMessage()) {
+        <div class="alert alert-info">{{ postMessage() }}</div>
+        }
+
+        <div class="panel-actions">
+          <button class="btn btn-ghost" (click)="cancelPostEdit()">Cancel</button>
+          <button class="btn btn-primary" (click)="savePost()" [disabled]="postSaving()">
+            {{ postSaving() ? 'Saving...' : (editingPost()?.id ? 'Update Post' : 'Create Post') }}
+          </button>
+        </div>
+      </div>
+      }
+    </section>
+    }
+
+    <!-- ═══ Portfolio Tab ══════════════════════════════════ -->
+    @if (activeTab() === 'portfolio') {
+    <section class="tab-panel">
+
+      @if (editingProject() === null) {
+      <!-- Project List -->
+      <div class="panel-header">
+        <h2>Portfolio Projects</h2>
+        @if (projectMessage()) {
+        <span class="status-msg">{{ projectMessage() }}</span>
+        }
+        <button class="btn btn-primary" (click)="newProject()">+ New Project</button>
+      </div>
+
+      @if (projectsLoading()) {
+      <p class="loading-text">Loading projects...</p>
+      } @else {
+      <div class="data-table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Date</th>
+              <th>Tags</th>
+              <th>Links</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (proj of projects(); track proj.id) {
+            <tr>
+              <td>{{ proj.title }}</td>
+              <td>{{ formatDate(proj.date) }}</td>
+              <td>
+                @for (tag of proj.tags; track tag) {
+                <span class="tag">{{ tag }}</span>
+                }
+              </td>
+              <td class="links-cell">
+                @if (proj.liveUrl) {
+                <a [href]="proj.liveUrl" target="_blank" rel="noopener">Live</a>
+                }
+                @if (proj.repoUrl) {
+                <a [href]="proj.repoUrl" target="_blank" rel="noopener">Repo</a>
+                }
+              </td>
+              <td class="actions-cell">
+                <button class="btn btn-sm" (click)="editProject(proj)">Edit</button>
+                <button class="btn btn-sm btn-danger" (click)="deleteProject(proj)">Delete</button>
+              </td>
+            </tr>
+            } @empty {
+            <tr><td colspan="5" class="empty-row">No projects yet.</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      }
+
+      } @else {
+      <!-- Project Edit Form -->
+      <div class="panel-header">
+        <h2>{{ editingProject()?.id ? 'Edit Project' : 'New Project' }}</h2>
+      </div>
+
+      <div class="edit-form">
+        <div class="form-row">
+          <div class="form-group flex-2">
+            <label>Title</label>
+            <input type="text" [(ngModel)]="editingProject()!.title" />
+          </div>
+          <div class="form-group flex-1">
+            <label>Date</label>
+            <input type="date" [(ngModel)]="editingProject()!.date" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea rows="3" [(ngModel)]="editingProject()!.description" placeholder="Short description..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Tags (comma-separated)</label>
+          <input type="text" [(ngModel)]="projectTagsInput" placeholder="React, Node.js, PostgreSQL" />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label>Live URL</label>
+            <input type="url" [(ngModel)]="editingProject()!.liveUrl" placeholder="https://..." />
+          </div>
+          <div class="form-group flex-1">
+            <label>Repo URL</label>
+            <input type="url" [(ngModel)]="editingProject()!.repoUrl" placeholder="https://github.com/..." />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Cover Image</label>
+          <div class="image-upload-row">
+            @if (editingProject()?.coverImage) {
+            <img [src]="editingProject()!.coverImage" alt="Cover preview" class="cover-preview" />
+            }
+            <input type="file" accept="image/*" (change)="onProjectCoverUpload($event)" />
+            <span class="or-text">or</span>
+            <input type="text" [(ngModel)]="editingProject()!.coverImage" placeholder="Paste image URL" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Gallery Images (one URL per line, or upload)</label>
+          <input type="file" accept="image/*" multiple (change)="onProjectGalleryUpload($event)" />
+          <textarea rows="4" [(ngModel)]="projectImagesInput" placeholder="https://example.com/img1.jpg&#10;https://example.com/img2.jpg" class="code-area"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Body (HTML)</label>
+          <textarea rows="14" [(ngModel)]="editingProject()!.body" placeholder="Full project write-up (HTML supported)..." class="code-area"></textarea>
+        </div>
+
+        @if (projectMessage()) {
+        <div class="alert alert-info">{{ projectMessage() }}</div>
+        }
+
+        <div class="panel-actions">
+          <button class="btn btn-ghost" (click)="cancelProjectEdit()">Cancel</button>
+          <button class="btn btn-primary" (click)="saveProject()" [disabled]="projectSaving()">
+            {{ projectSaving() ? 'Saving...' : (editingProject()?.id ? 'Update Project' : 'Create Project') }}
+          </button>
+        </div>
+      </div>
+      }
+    </section>
+    }
+
+    <!-- ═══ Comments Tab ═══════════════════════════════════ -->
+    @if (activeTab() === 'comments') {
+    <section class="tab-panel">
+      <div class="panel-header">
+        <h2>Comments</h2>
+      </div>
+
+      @if (commentsLoading()) {
+      <p class="loading-text">Loading comments...</p>
+      } @else {
+      <div class="comments-list">
+        @for (comment of comments(); track comment.id) {
+        <div class="comment-card">
+          <div class="comment-header">
+            <strong>{{ comment.author }}</strong>
+            <span class="comment-meta">
+              on <em>{{ comment.postTitle }}</em> &middot; {{ formatDate(comment.date) }}
+            </span>
+          </div>
+          <p class="comment-body">{{ comment.body }}</p>
+          @if (comment.email || comment.website) {
+          <div class="comment-private">
+            <span class="private-badge">Private</span>
+            @if (comment.email) {
+            <span>Email: <a [href]="'mailto:' + comment.email">{{ comment.email }}</a></span>
+            }
+            @if (comment.website) {
+            <span>Website: <a [href]="comment.website" target="_blank" rel="noopener">{{ comment.website }}</a></span>
+            }
+          </div>
+          }
+          <div class="comment-actions">
+            <button class="btn btn-sm btn-danger" (click)="deleteComment(comment)">Delete</button>
+          </div>
+        </div>
+        } @empty {
+        <p class="empty-text">No comments yet.</p>
+        }
+      </div>
+      }
+    </section>
+    }
+
+    <!-- ═══ Password Tab ═══════════════════════════════════ -->
+    @if (activeTab() === 'password') {
+    <section class="tab-panel">
+      <div class="panel-header">
+        <h2>Change Password</h2>
+      </div>
+
+      <div class="edit-form narrow">
+        <div class="form-group">
+          <label>Current Password</label>
+          <input type="password" [(ngModel)]="currentPassword" autocomplete="current-password" />
+        </div>
+        <div class="form-group">
+          <label>New Password</label>
+          <input type="password" [(ngModel)]="newPassword" autocomplete="new-password" />
+        </div>
+        <div class="form-group">
+          <label>Confirm New Password</label>
+          <input type="password" [(ngModel)]="confirmPassword" autocomplete="new-password" />
+        </div>
+
+        @if (passwordMessage()) {
+        <div class="alert alert-info">{{ passwordMessage() }}</div>
+        }
+
+        <div class="panel-actions">
+          <button class="btn btn-primary" (click)="changePassword()" [disabled]="passwordSaving()">
+            {{ passwordSaving() ? 'Changing...' : 'Change Password' }}
+          </button>
+        </div>
+      </div>
+    </section>
+    }
+
+  </div>
+</div>
+}

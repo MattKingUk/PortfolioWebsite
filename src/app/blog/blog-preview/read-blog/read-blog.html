@@ -1,0 +1,107 @@
+@if (loading()) {
+  <div class="read-blog-loading">
+    <div class="spinner"></div>
+  </div>
+} @else if (post(); as p) {
+  <article class="read-blog">
+    <header class="read-blog-header">
+      <a routerLink="/blog" class="back-link">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/>
+        </svg>
+        Back to Blog
+      </a>
+      <div class="header-tags">
+        @for (tag of p.tags; track tag) {
+          <span class="tag">{{ tag }}</span>
+        }
+      </div>
+      <h1 class="read-blog-title">{{ p.title }}</h1>
+      <div class="read-blog-meta">
+        <span class="meta-author">{{ p.author }}</span>
+        <span class="meta-separator">·</span>
+        <span class="meta-date">{{ formattedDate }}</span>
+      </div>
+    </header>
+
+    <div class="read-blog-cover" [style.backgroundImage]="'url(' + p.coverImage + ')'"></div>
+
+    <div class="read-blog-body">
+      @for (paragraph of bodyParagraphs; track $index) {
+        <p [innerHTML]="paragraph"></p>
+      }
+    </div>
+
+    <section class="comments-section">
+      <h2 class="comments-heading">
+        Comments
+        <span class="comments-count">{{ comments().length }}</span>
+      </h2>
+      @if (comments().length === 0) {
+        <p class="no-comments">No comments yet. Be the first to share your thoughts!</p>
+      } @else {
+        <div class="comments-list">
+          @for (comment of comments(); track comment.id) {
+            <div class="comment-card">
+              <div class="comment-avatar">{{ comment.avatar }}</div>
+              <div class="comment-body">
+                <div class="comment-header">
+                  <span class="comment-author">{{ comment.author }}</span>
+                  <span class="comment-date">{{ formatCommentDate(comment.date) }}</span>
+                </div>
+                <p class="comment-text">{{ comment.body }}</p>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </section>
+
+    <!-- Comment Form -->
+    <section class="comment-form-section">
+      <h3 class="comment-form-heading">Leave a Comment</h3>
+
+      @if (commentMessage()) {
+      <div class="form-alert form-alert-success">{{ commentMessage() }}</div>
+      }
+      @if (commentError()) {
+      <div class="form-alert form-alert-error">{{ commentError() }}</div>
+      }
+
+      <form (ngSubmit)="submitComment()" class="comment-form">
+        <div class="cf-row">
+          <div class="cf-field">
+            <label for="cf-name">Name *</label>
+            <input id="cf-name" type="text" [(ngModel)]="commentName" name="name" required placeholder="Your name" />
+          </div>
+          <div class="cf-field">
+            <label for="cf-email">Email <span class="cf-private">(only visible to site owner)</span></label>
+            <input id="cf-email" type="email" [(ngModel)]="commentEmail" name="email" placeholder="your@email.com" />
+          </div>
+        </div>
+        <div class="cf-field">
+          <label for="cf-website">Website <span class="cf-private">(only visible to site owner)</span></label>
+          <input id="cf-website" type="url" [(ngModel)]="commentWebsite" name="website" placeholder="https://..." />
+        </div>
+        <div class="cf-field">
+          <label for="cf-body">Comment *</label>
+          <textarea id="cf-body" rows="4" [(ngModel)]="commentBody" name="body" required placeholder="Share your thoughts..."></textarea>
+        </div>
+        <button type="submit" class="cf-submit" [disabled]="commentSubmitting() || !commentName.trim() || !commentBody.trim()">
+          {{ commentSubmitting() ? 'Posting...' : 'Post Comment' }}
+        </button>
+      </form>
+    </section>
+  </article>
+} @else {
+  <div class="read-blog-not-found">
+    <h2>Post not found</h2>
+    <p>The blog post you're looking for doesn't exist.</p>
+    <a routerLink="/blog" class="back-link">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/>
+      </svg>
+      Back to Blog
+    </a>
+  </div>
+}

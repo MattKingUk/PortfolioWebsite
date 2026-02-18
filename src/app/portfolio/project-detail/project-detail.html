@@ -1,0 +1,97 @@
+<div class="project-detail-container">
+  @if (loading()) {
+    <div class="loading">
+      <div class="skeleton-hero"></div>
+      <div class="skeleton-text"></div>
+      <div class="skeleton-text short"></div>
+    </div>
+  } @else if (project(); as proj) {
+    <!-- Back link -->
+    <a routerLink="/portfolio" class="back-link">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+      Back to Portfolio
+    </a>
+
+    <!-- Hero image -->
+    <div class="hero-image">
+      <img [src]="proj.coverImage" [alt]="proj.title" />
+    </div>
+
+    <!-- Header -->
+    <div class="project-header">
+      <h1>{{ proj.title }}</h1>
+      <p class="description">{{ proj.description }}</p>
+
+      <div class="meta-row">
+        <span class="date">{{ proj.date }}</span>
+        <div class="tags">
+          @for (tag of proj.tags; track tag) {
+            <span class="tag">{{ tag }}</span>
+          }
+        </div>
+      </div>
+
+      <div class="links">
+        @if (proj.liveUrl) {
+          <a [href]="proj.liveUrl" target="_blank" rel="noopener" class="btn btn-primary">
+            View Live
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+          </a>
+        }
+        @if (proj.repoUrl) {
+          <a [href]="proj.repoUrl" target="_blank" rel="noopener" class="btn btn-secondary">
+            Source Code
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+          </a>
+        }
+        @if (!proj.liveUrl && !proj.repoUrl) {
+          <p class="no-links">No live demo or source code link available for this project.</p>
+        }
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div class="project-body">
+      @for (paragraph of proj.body.split('\n\n'); track $index) {
+        <p>{{ paragraph }}</p>
+      }
+    </div>
+
+    <!-- Gallery -->
+    @if (proj.images.length > 1) {
+      <div class="gallery-section">
+        <h2>Gallery</h2>
+        <div class="gallery-grid">
+          @for (img of proj.images; track img) {
+            <div class="gallery-item" (click)="openLightbox(img)">
+              <img [src]="img" [alt]="proj.title + ' screenshot'" loading="lazy" />
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Lightbox -->
+    @if (selectedImage(); as imgUrl) {
+      <div class="lightbox" (click)="closeLightbox()">
+        <img [src]="imgUrl" alt="Full size preview" />
+        <button class="lightbox-close" aria-label="Close">✕</button>
+      </div>
+    }
+  } @else {
+    <div class="not-found">
+      <h2>Project not found</h2>
+      <a routerLink="/portfolio" class="back-link">Back to Portfolio</a>
+    </div>
+  }
+</div>

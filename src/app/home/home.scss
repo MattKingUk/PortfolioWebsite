@@ -1,0 +1,46 @@
+section {
+    min-height: 100vh;
+    position: relative;
+}
+.calendar-container{
+    position: relative;
+    left: 9%;
+    top: 9vh;
+    margin-bottom: 18vh;
+    width: 75%;
+    height: 820px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+.blog-preview-container {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 82%;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.section-heading {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: rgba(30, 35, 50, 0.9);
+    margin: 0;
+    letter-spacing: -0.02em;
+    text-align: center;
+    -webkit-font-smoothing: antialiased;
+}
+
+@media (max-width: 768px) {
+    .blog-preview-container {
+        width: 90%;
+    }
+
+    .section-heading {
+        font-size: 24px;
+    }
+}

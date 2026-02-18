@@ -1,0 +1,52 @@
+<section id="header">
+    <div class="heading-container">
+      <h1 class="title">{{ settingsService.get('portfolio_title', 'Portfolio') }}</h1>
+      <p class="subtitle">{{ settingsService.get('portfolio_subtitle', 'A collection of solo projects I have worked on.') }}</p>
+    </div>
+    <app-tech-illustration></app-tech-illustration>
+</section>
+<div class="content-with-sidebar">
+  <div class="main-content" [class.shrunk]="contactFormOpen()">
+    <section>
+      <div class="portfolio-container">
+        @if (loading()) {
+          <div class="loading-grid">
+            @for (i of [1,2,3,4,5,6]; track i) {
+            <div class="skeleton-card"></div>
+          }
+        </div>
+      } @else {
+        <div class="photo-grid">
+          @for (item of items(); track item.project.id) {
+            <a
+              class="grid-item"
+              [routerLink]="['/portfolio', item.project.id]"
+              [class.hovered]="hoveredId() === item.project.id"
+              [class.dimmed]="hoveredId() !== null && hoveredId() !== item.project.id"
+              [class.col-span-2]="item.colSpan === 2"
+              [class.row-span-2]="item.rowSpan === 2"
+              (mouseenter)="onHover(item.project.id)"
+              (mouseleave)="onLeave()"
+              >
+              <img [src]="item.project.coverImage" [alt]="item.project.title" loading="lazy" />
+              <div class="overlay">
+                <h3>{{ item.project.title }}</h3>
+                <div class="tags">
+                  @for (tag of item.project.tags; track tag) {
+                    <span class="tag">{{ tag }}</span>
+                  }
+                </div>
+              </div>
+            </a>
+          }
+        </div>
+      }
+    </div>
+    </section>
+  </div>
+  @if (contactFormOpen()) {
+    <app-contact-form (closed)="toggleContactForm()"></app-contact-form>
+  }
+</div>
+
+<app-navbar [items]="navItems" (contactFormToggle)="toggleContactForm()"></app-navbar>

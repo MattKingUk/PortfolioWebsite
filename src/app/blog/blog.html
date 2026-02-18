@@ -1,0 +1,51 @@
+<section id="header">
+  <div class="heading-container">
+    <h1 class="title">{{ settingsService.get('blog_title', 'Blog') }}</h1>
+    <p class="subtitle">
+      {{ settingsService.get('blog_subtitle', 'Thoughts on software engineering, design, and the things I learn along the way.') }}
+    </p>
+  </div>
+  <app-tech-illustration></app-tech-illustration>
+</section>
+
+<div class="content-with-sidebar">
+  <div class="main-content" [class.shrunk]="contactFormOpen()">
+    <section class="blog-content">
+      <div class="search-container">
+        <div class="search-bar">
+          <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+          </svg>
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Search posts by title, tag, or keyword..."
+            [value]="searchQuery()"
+            (input)="onSearch($event)"
+          />
+        </div>
+      </div>
+
+      @if (loading()) {
+        <div class="blog-loading">
+          <div class="spinner"></div>
+        </div>
+      } @else if (posts().length === 0) {
+        <div class="blog-empty">
+          <p>No posts found matching your search.</p>
+        </div>
+      } @else {
+        <div class="posts-grid">
+          @for (post of posts(); track post.id) {
+            <app-blog-preview [post]="post"></app-blog-preview>
+          }
+        </div>
+      }
+    </section>
+  </div>
+  @if (contactFormOpen()) {
+    <app-contact-form (closed)="toggleContactForm()"></app-contact-form>
+  }
+</div>
+
+<app-navbar [items]="navItems" (contactFormToggle)="toggleContactForm()"></app-navbar>
