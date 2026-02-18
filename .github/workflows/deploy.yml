@@ -33,14 +33,21 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
           set -euo pipefail
-          mkdir -p /var/www/portfolio
-          cd /var/www/portfolio
+          REPO_PATH="/home/mattking.uk/portfolio"
+          WEB_ROOT="/home/mattking.uk/public_html"
 
-          if [ -d .git ]; then
+          # Ensure web root exists
+          mkdir -p "$WEB_ROOT"
+
+          # Clone or update repo
+          if [ -d "$REPO_PATH/.git" ]; then
+            cd "$REPO_PATH"
             git fetch --all
             git reset --hard origin/main
           else
-            git clone https://github.com/${{ github.repository }} . || true
+            mkdir -p "$REPO_PATH"
+            git clone https://github.com/${{ github.repository }} "$REPO_PATH"
+            cd "$REPO_PATH"
           fi
 
           # Write server/.env from secrets
@@ -52,10 +59,18 @@ jobs:
           EOF
           chmod 600 server/.env
 
+          # Install dependencies
           npm install
           cd server && npm install && cd ..
+
+          # Build Angular app
           npx ng build --configuration=production
 
+          # Copy built app to web root (remove old, copy new)
+          rm -rf "$WEB_ROOT"/*
+          cp -r dist/portfolio-try-3/* "$WEB_ROOT/"
+
+          # Install pm2 if needed and start backend
           if ! command -v pm2 >/dev/null 2>&1; then
             npm install -g pm2
           fi
