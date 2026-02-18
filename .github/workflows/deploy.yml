@@ -78,6 +78,12 @@ jobs:
           if ! command -v pm2 >/dev/null 2>&1; then
             npm install -g pm2
           fi
-          pm2 startOrReload ecosystem.config.js --env production || pm2 start ecosystem.config.js --env production
+          # Stop old pm2 app if it exists
+          pm2 stop portfolio-backend 2>/dev/null || true
+          pm2 delete portfolio-backend 2>/dev/null || true
+          # Kill any stray node processes on port 3000
+          lsof -ti :3000 | xargs kill -9 2>/dev/null || true
+          # Start fresh
+          pm2 start ecosystem.config.js --env production
           pm2 save
           pm2 status
