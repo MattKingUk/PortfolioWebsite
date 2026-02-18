@@ -31,6 +31,7 @@ jobs:
         host: ${{ secrets.DEPLOY_HOST }}
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: 7822
         script: |
           set -euo pipefail
           REPO_PATH="/home/mattking.uk/portfolio"
