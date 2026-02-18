@@ -65,7 +65,7 @@ jobs:
 
           # Install dependencies
           npm install
-          cd server && npm install && cd ..
+          cd server && npm install && npm rebuild && cd ..
 
           # Build Angular app
           npx ng build --configuration=production
