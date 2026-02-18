@@ -33,7 +33,8 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 7822
         script: |
-          source ~/.bashrc
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
           set -euo pipefail
           REPO_PATH="/home/mattking.uk/portfolio"
           WEB_ROOT="/home/mattking.uk/public_html"
