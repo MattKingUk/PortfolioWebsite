@@ -35,6 +35,7 @@ jobs:
         script: |
           export NVM_DIR="$HOME/.nvm"
           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          nvm use 22
           set -euo pipefail
           REPO_PATH="/home/mattking.uk/portfolio"
           WEB_ROOT="/home/mattking.uk/public_html"
