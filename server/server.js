@@ -8,6 +8,9 @@ require('dotenv').config();
 require('./db');
 
 const app = express();
+
+app.set('trust proxy', 'loopback');
+
 const PORT = process.env.PORT || 3000;
 
 app.use(
