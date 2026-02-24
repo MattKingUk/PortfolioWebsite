@@ -35,6 +35,16 @@ const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:4200')
   .split(',')
   .map((s) => s.trim());
 
+
+// Log incoming Origin header and allowedOrigins for debugging
+app.use((req, res, next) => {
+  if (req.headers.origin) {
+    console.log('[CORS DEBUG] Incoming Origin:', req.headers.origin);
+    console.log('[CORS DEBUG] Allowed Origins:', allowedOrigins);
+  }
+  next();
+});
+
 app.use(
   cors({
     origin: (origin, callback) => {
@@ -46,7 +56,6 @@ app.use(
     credentials: true,
   })
 );
-
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
