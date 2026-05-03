@@ -1,0 +1,9 @@
+node_modules
+dist
+.git
+.github
+server/data
+server/uploads
+*.md
+.env
+.env.*

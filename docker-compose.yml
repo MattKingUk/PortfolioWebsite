@@ -1,0 +1,20 @@
+services:
+  frontend:
+    image: ${IMAGE_PREFIX}/portfolio-frontend:latest
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8080:80"
+
+  backend:
+    image: ${IMAGE_PREFIX}/portfolio-backend:latest
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - backend_data:/app/data
+      - backend_uploads:/app/uploads
+
+volumes:
+  backend_data:
+  backend_uploads:
