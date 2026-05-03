@@ -15,6 +15,10 @@
 .tech-illustration {
     width: 82%;
     height: 82%;
+    max-width: 100%;
+    max-height: 100%;
+    flex: 0 1 auto;
+    align-self: center;
     overflow: visible;
 }
 
@@ -31,30 +35,30 @@
 
 /* ── per-icon colour + delay + glow ── */
 .icon--computer {
-    filter: drop-shadow(0 0 9px rgba(88, 237, 255, 0.8))
-            drop-shadow(0 0 21px rgba(88, 237, 255, 0.5))
-            drop-shadow(0 0 40px rgba(88, 237, 255, 0.3));
+    filter: drop-shadow(0 0 9px rgba(56, 189, 248, 0.8))
+            drop-shadow(0 0 21px rgba(56, 189, 248, 0.5))
+            drop-shadow(0 0 40px rgba(56, 189, 248, 0.3));
 
     > * {
-        stroke: #ffffff;
+        stroke: #0ea5e9;
         animation: drawIcon 9s linear infinite;
         animation-delay: 0s;
     }
 }
 
 .icon--brain {
-    filter: drop-shadow(0 0 9px rgba(255, 158, 207, 0.8))
-            drop-shadow(0 0 21px rgba(255, 158, 207, 0.5))
-            drop-shadow(0 0 40px rgba(255, 158, 207, 0.3));
+    filter: drop-shadow(0 0 9px rgba(217, 70, 239, 0.7))
+            drop-shadow(0 0 21px rgba(217, 70, 239, 0.4))
+            drop-shadow(0 0 40px rgba(217, 70, 239, 0.25));
 
     > * {
-        stroke: #ffffff;
+        stroke: #c026d3;
         animation: drawIcon 9s linear infinite;
         animation-delay: 3s;
     }
 
     > circle {
-        fill: #ffffff;
+        fill: #c026d3;
         stroke: none;
         stroke-dasharray: 0;
         stroke-dashoffset: 0;
@@ -62,12 +66,12 @@
 }
 
 .icon--bulb {
-    filter: drop-shadow(0 0 9px rgba(255, 210, 103, 0.8))
-            drop-shadow(0 0 21px rgba(255, 210, 103, 0.5))
-            drop-shadow(0 0 40px rgba(255, 210, 103, 0.3));
+    filter: drop-shadow(0 0 9px rgba(234, 179, 8, 0.7))
+            drop-shadow(0 0 21px rgba(234, 179, 8, 0.4))
+            drop-shadow(0 0 40px rgba(234, 179, 8, 0.25));
 
     > * {
-        stroke: #ffffff;
+        stroke: #ca8a04;
         animation: drawIcon 9s linear infinite;
         animation-delay: 6s;
     }
